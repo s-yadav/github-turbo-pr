@@ -22,7 +22,7 @@
         "19": "icons/turbopr19_disabled.png",
         "38": "icons/turbopr38_disabled.png"
     },
-    "default_title": "page action demo"
+    "default_title": "Toggle turbo pr"
   },
   "permissions": [
     "https://github.com/*",
