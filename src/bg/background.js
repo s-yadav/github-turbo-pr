@@ -42,6 +42,6 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
 
     //toggele extension before leaving the page
     if (!url.match(githubRegex)) {
-      //chrome.tabs.sendMessage(tabId, {"message": "toggle_extension", disable: true});
+      chrome.tabs.sendMessage(tabId, {"message": "handle_outbound_navigation"});
     }
 });

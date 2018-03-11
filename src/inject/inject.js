@@ -44,10 +44,10 @@ class GithubTurboPr {
 
     let lastWindowWidth = window.innerWidth;
 
-    this.scrollHandler = debounce(() => {
+    this.resizeHandler = debounce(() => {
       const newWidth = window.innerWidth;
       if (newWidth !== lastWindowWidth) {
-        allContents.forEach((elem) => {
+        this.allContents.forEach((elem) => {
           const {isInView} = fileContentMap.get(elem);
           if (isInView) return;
 
@@ -141,7 +141,7 @@ class GithubTurboPr {
   	this.observeDocumentHeight();
 
     //handle case when window is resized horizontally due to which the files height is changing
-  	window.addEventListener('resize', this.scrollHandler);
+  	window.addEventListener('resize', this.resizeHandler);
   }
 
   clear() {
@@ -160,7 +160,7 @@ class GithubTurboPr {
     window.cancelAnimationFrame(this.documentRafId);
 
     //stop listining resize event
-    window.removeEventListener('resize', this.scrollHandler);
+    window.removeEventListener('resize', this.resizeHandler);
   }
 
   disable() {
@@ -183,6 +183,9 @@ chrome.runtime.onMessage.addListener(
       }
 
       chrome.runtime.sendMessage({"message": "change_icon", "enabled": turboPr.enabled});
+    } else if (request.message === "handle_outbound_navigation" && turboPr.enabled) {
+      //refresh page to reset the states other wise back navigation breaks the page
+      document.location.reload(true);
     }
   }
 );
