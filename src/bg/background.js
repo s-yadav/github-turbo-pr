@@ -20,18 +20,26 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     const {url, tab} = sender;
-    if (request.message === "show_extension") {
-      toggleExtension(url, tab.id);
-    } else if ( request.message === "change_icon" ) {
-      const iconSmall = request.enabled ? 'icons/turbopr19.png' : 'icons/turbopr19_disabled.png';
-      const iconBig = request.enabled ? 'icons/turbopr38.png' : 'icons/turbopr38_disabled.png';
+    const {message, enabled} = request;
+    const tabId = tab.id;
+
+    if (message === "show_extension") {
+      toggleExtension(url, tabId);
+    } else if (message === "change_icon") {
+      const iconSmall = enabled ? 'icons/turbopr19.png' : 'icons/turbopr19_disabled.png';
+      const iconBig = enabled ? 'icons/turbopr38.png' : 'icons/turbopr38_disabled.png';
+      const title = enabled ? 'Disable Turbo PR' : 'Enable Turbo PR';
       chrome.pageAction.setIcon({
         path: {
           '19': iconSmall,
           '38': iconBig
         },
-        tabId: tab.id
+        tabId
       });
+      chrome.pageAction.setTitle({
+        title,
+        tabId
+      })
     }
   }
 );
