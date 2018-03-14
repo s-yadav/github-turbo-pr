@@ -13,7 +13,7 @@ On a PR compare page it will get enabled but by default turned off ![alt Off](./
 If you feel your page is getting slow on a big PR you can click and turn it on ![alt On](./icons/turbopr38.png). You can toggle it back to off if you want.
 
 ### How does it optimize?
-It applies a simple trick by detaching file diffs which are not visible and reattach them when they are about to come on viewport. Less DOM nodes in a DOM Tree, more performant the page it. And it does it performantly using [Interaction Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
+It applies a simple trick by detaching file diffs which are not visible and reattach them when they are about to come on viewport. Less DOM nodes in a DOM Tree, more performant the page it. And it does it performantly using [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 
 ### Known caveats.
 - As for optimization it detaches file diff from the page, browser find will not work as expected. Though you can search with a file name but not the content.
