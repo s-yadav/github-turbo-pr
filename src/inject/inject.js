@@ -15,6 +15,17 @@ function debounce(fn, time) {
   }
 }
 
+function throttle(fn, time) {
+  let lastTime = 0;
+  return function() {
+    const currentTime = Date.now();
+    if (currentTime - lastTime > time) {
+      fn();
+      lastTime = currentTime;
+    }
+  }
+}
+
 function setElemDimension(elem) {
   elem.style.height = `${elem.scrollHeight}px`;
 }
@@ -41,6 +52,8 @@ class GithubTurboPr {
     this.enabled = false;
 
     this.observeDocumentHeight = this.observeDocumentHeight.bind(this);
+    
+    this.toggle = throttle(this.toggle.bind(this), 1000);
 
     let lastWindowWidth = window.innerWidth;
 
@@ -127,9 +140,6 @@ class GithubTurboPr {
   }
 
   enable() {
-    //clear old things before if any before enabling
-    this.clear();
-
     this.enabled = true;
 
   	this.allContents = this.getFileContents();
@@ -144,7 +154,9 @@ class GithubTurboPr {
   	window.addEventListener('resize', this.resizeHandler);
   }
 
-  clear() {
+  disable() {
+    this.enabled = false;
+
     //reset file content and stop observing
     this.allContents.forEach((elem) => {
       this.showFileContent(elem);
@@ -163,10 +175,16 @@ class GithubTurboPr {
     window.removeEventListener('resize', this.resizeHandler);
   }
 
-  disable() {
-    this.enabled = false;
+  toggle() {
+    const {enabled} = this;
 
-    this.clear();
+    chrome.runtime.sendMessage({"message": "change_icon", "enabled": !enabled});
+
+    if (enabled) {
+      this.disable();
+    } else {
+      this.enable();
+    }
   }
 }
 
@@ -175,14 +193,7 @@ const turboPr = new GithubTurboPr();
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.message === "toggle_extension") {
-
-      if (turboPr.enabled) {
-        turboPr.disable();
-      } else {
-        turboPr.enable();
-      }
-
-      chrome.runtime.sendMessage({"message": "change_icon", "enabled": turboPr.enabled});
+      turboPr.toggle();
     } else if (request.message === "handle_outbound_navigation" && turboPr.enabled) {
       //refresh page to reset the states other wise back navigation breaks the page
       document.location.reload(true);

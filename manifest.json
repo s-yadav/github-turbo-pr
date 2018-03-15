@@ -1,6 +1,6 @@
 {
   "name": "Github Turbo PR",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "manifest_version": 2,
   "description": "An extension to optimize github for handling big pull request. 🚀",
   "homepage_url": "http://github.com/s-yadav/github-turbo-pr",
