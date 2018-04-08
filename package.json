@@ -1,0 +1,23 @@
+{
+  "name": "github-turbo-pr",
+  "version": "0.2.0",
+  "description": "An extension to optimize github for handling big pull request. 🚀",
+  "scripts": {
+    "build": "webpack",
+    "start": "NODE_ENV=development webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s-yadav/github-turbo-pr.git"
+  },
+  "author": "Sudhanshu Yadav",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/s-yadav/github-turbo-pr/issues"
+  },
+  "homepage": "https://github.com/s-yadav/github-turbo-pr#readme",
+  "devDependencies": {
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14"
+  }
+}

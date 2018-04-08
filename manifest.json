@@ -1,6 +1,6 @@
 {
   "name": "Github Turbo PR",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "manifest_version": 2,
   "description": "An extension to optimize github for handling big pull request. 🚀",
   "homepage_url": "http://github.com/s-yadav/github-turbo-pr",
@@ -12,7 +12,7 @@
   "default_locale": "en",
   "background": {
     "scripts": [
-      "src/bg/background.js"
+      "dist/background.js"
     ],
     "persistent": true
   },
@@ -30,11 +30,15 @@
   "content_scripts": [
     {
       "matches": [
-        "https://github.com/*"
+        "<all_urls>"
       ],
       "js": [
-        "src/inject/inject.js"
+        "dist/inject.js"
       ]
     }
+  ],
+  "web_accessible_resources": [
+    "icons/turbopr38.png",
+    "icons/turbopr38_disabled.png"
   ]
 }

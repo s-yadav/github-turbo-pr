@@ -1,18 +1,55 @@
-const githubRegex = /^https:\/\/github.com\/.*?\/pull\/.*?\/files.*$/;
+import {isGithubPRUrl} from '../util/common';
 
 function toggleExtension(url, tabId) {
-  if (url.match(githubRegex)) {
-    chrome.pageAction.show(tabId);
+  if (isGithubPRUrl(url)) {
+    changeIcon('disabled', tabId);
+    setPopup('disabled', tabId);
   } else {
-    chrome.pageAction.hide(tabId);
+    changeIcon('inactive', tabId);
+    setPopup('inactive', tabId);
   }
+}
+
+function changeIcon(state, tabId) {
+  const smallImage = {
+    enabled: 'icons/turbopr19.png',
+    disabled: 'icons/turbopr19_disabled.png',
+    inactive: 'icons/turbopr19_inactive.png'
+  }
+
+  const largeImage = {
+    enabled: 'icons/turbopr38.png',
+    disabled: 'icons/turbopr38_disabled.png',
+    inactive: 'icons/turbopr38_inactive.png'
+  }
+
+  chrome.pageAction.setIcon({
+    path: {
+      '19': smallImage[state],
+      '38': largeImage[state]
+    },
+    tabId
+  });
+}
+
+function setPopup(state, tabId) {
+  let popup;
+  if (state === 'inactive') {
+    popup = 'src/page_action/inactive_action.html';
+  } else {
+    popup = '';
+  }
+  chrome.pageAction.setPopup({
+    popup,
+    tabId
+  });
 }
 
 chrome.pageAction.onClicked.addListener(function(tab) {
   // Send a message to the active tab
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     var activeTab = tabs[0];
-    chrome.tabs.sendMessage(activeTab.id, {"message": "toggle_extension"});
+    chrome.tabs.sendMessage(activeTab.id, {'message': 'toggle_extension'});
   });
 });
 
@@ -20,22 +57,17 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     const {url, tab} = sender;
-    const {message, enabled} = request;
+    const {message, state} = request;
     const tabId = tab.id;
 
-    if (message === "show_extension") {
+    if (message === 'show_extension') {
+      chrome.pageAction.show(tabId)
       toggleExtension(url, tabId);
-    } else if (message === "change_icon") {
-      const iconSmall = enabled ? 'icons/turbopr19.png' : 'icons/turbopr19_disabled.png';
-      const iconBig = enabled ? 'icons/turbopr38.png' : 'icons/turbopr38_disabled.png';
-      const title = enabled ? 'Disable Turbo PR' : 'Enable Turbo PR';
-      chrome.pageAction.setIcon({
-        path: {
-          '19': iconSmall,
-          '38': iconBig
-        },
-        tabId
-      });
+    } else if (message === 'change_state') {
+      const title = state === 'enabled' ? 'Disable Turbo PR' : 'Enable Turbo PR';
+
+      changeIcon(state, tabId);
+
       chrome.pageAction.setTitle({
         title,
         tabId
@@ -49,7 +81,7 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
     toggleExtension(url, tabId);
 
     //toggele extension before leaving the page
-    if (!url.match(githubRegex)) {
-      chrome.tabs.sendMessage(tabId, {"message": "handle_outbound_navigation"});
+    if (!isGithubPRUrl(url)) {
+      chrome.tabs.sendMessage(tabId, {'message': 'handle_outbound_navigation'});
     }
 });
