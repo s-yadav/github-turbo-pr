@@ -8,7 +8,7 @@ Download extension on
 [Chrome WebStore](https://chrome.google.com/webstore/detail/github-turbo-pr/bajlfgjogojcoiijmmjeppgmppcdbbfb)
 
 ### Usage
-For non Pull Request page the extension will be disabled <img height="16" src="./icons/turbopr38_inactive.png" alt="inactive"/>.
+For non Pull Request page the extension will be inactive <img height="16" src="./icons/turbopr38_inactive.png" alt="inactive"/>.
 On a PR compare page it will get active but by default it will be disabled <img height="16" src="./icons/turbopr38_disabled.png" alt="disabled"/>.
 If you feel your page is getting slow on a big PR you can click and enable (<img height="16" src="./icons/turbopr38.png" alt="enabled"/>) it. You can toggle it back if you want.
 
