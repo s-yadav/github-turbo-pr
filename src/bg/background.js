@@ -80,7 +80,7 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
     const {url, tabId} = details;
     toggleExtension(url, tabId);
 
-    //toggele extension before leaving the page
+    //toggle extension before leaving the page
     if (!isGithubPRUrl(url)) {
       chrome.tabs.sendMessage(tabId, {'message': 'handle_outbound_navigation'});
     }
